@@ -1,0 +1,39 @@
+nginx:
+    build: ./nginx/
+    ports:
+        - 80:80
+    links:
+        - php
+    volumes_from:
+        - app
+php:
+    build: ./php/
+    expose:
+        - 9000
+    links:
+        - mysql        
+    volumes_from:
+        - app
+app:
+    image: php:7.0-fpm
+    volumes:
+        - /Library/WebServer/Documents/arjf:/var/www/arjf
+    command: bash -c "chown -R www-data:www-data /var/www/arjf && chmod -R 0777 /var/www/arjf/public/blog/"
+mysql:
+    build: ./mysql/
+    ports:
+        - 3306
+    volumes:
+        - ./docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    volumes_from:
+        - data
+    environment:
+        MYSQL_ROOT_PASSWORD: 123
+        MYSQL_DATABASE: arjf
+        MYSQL_USER: arjf
+        MYSQL_PASSWORD: 123
+data:
+    image: mysql:latest
+    volumes:
+        - /var/lib/mysql
+    command: "true"
