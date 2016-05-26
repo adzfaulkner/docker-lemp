@@ -16,8 +16,5 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 	
-VOLUME /var/www/arjf
-
-RUN chown -R www-data:www-data /var/www/arjf \
-&& chmod -R 0775 /var/www/arjf
+RUN usermod -u 1000 www-data
 		
